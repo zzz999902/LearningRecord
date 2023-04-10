@@ -177,7 +177,7 @@ const data = await delay()
 console.log(data)
 ```
 
-# fs 文件流IO
+# 文件IO
 
 1. 凡是对外部设备的输入输出都是IO
 2. IO的速度往往低于内存和CPU的交互速度
@@ -303,3 +303,180 @@ async function test() {
 }
 test();
 ```
+
+## unlink(删除文件)
+
+```js
+const fs = require('fs');
+const path = require('path');
+const dirname = path.resolve(__dirname, './myfiles/3.jpeg');
+
+fs.promises.unlink(dirname);
+```
+
+# 流
+
+流是指数据的流动，数据从一个地方缓缓的流动到另一个地方
+
+![](/Node/img/b72468dcc9cb82fb6ddc5acdd22dfeeb9646629179ba26e818a446d267693a43.png)
+
+流是有方向的：
+
+     1. 可读流（Readable）：数据从源头流向内存
+     2. 可写流（Writable）：数据从内存流向源头
+     3. 双工流（Duplex）：数据即可从源头流向内存,又可从内存流向源头
+
+## 为什么需要流
+
+1. 其他介质和内存的数据规模不一致
+
+
+![](/Node/img/2.png)
+
+2. 其他介质和内存的数据处理能力不一致
+
+![](/Node/img/1.png)
+
+## 文件流（可读流）
+
+**createReadStream**
+
+内存数据和磁盘文件数据之间的流动
+
+**文件流的创建**
+
+https://nodejs.cn/api-v18/fs.html#fscreatereadstreampath-options
+
+配置
+![](/Node/img/3.png)
+
+返回
+![](/Node/img/4.png)
+
+```js
+const fs = require('fs');
+const path = require('path');
+const dirname = path.resolve(__dirname, './myfiles/1.txt');
+
+const rs = fs.createReadStream(dirname, {
+  encoding: 'utf-8',
+  highWaterMark: 1,
+  autoClose: true, //读完自动关闭 默认为true
+});
+
+rs.on('open', () => {
+  console.log('文件被打开了');
+});
+
+rs.on('error', () => {
+  console.log('报错');
+});
+
+rs.on('close', () => {
+  console.log('文件被关闭了');
+});
+
+// 注册data事件后，才会真正开始读取
+// 每次读取highWaterMark指定的数量
+rs.on('data', (chunk) => {
+  console.log(chunk, 'chunk');
+  rs.pause(); //暂停
+});
+
+rs.on('pause', () => {
+  console.log('暂停');
+  rs.resume(); //恢复
+});
+
+rs.on('resume', () => {
+  console.log('恢复');
+});
+
+rs.on('end', () => {
+  console.log('读取完毕');
+});
+
+```
+
+## 文件流（可写流）
+
+**createWriteStream**
+
+配置
+![img](/Node/img/5.png)
+
+返回
+![img](/Node/img/6.png)
+
+代码详细
+```js
+const fs = require('fs');
+const path = require('path');
+const dirname = path.resolve(__dirname, './myfiles/1.txt');
+
+const ws = fs.createWriteStream(dirname, {
+  flags: 'a',
+  encoding: 'utf-8',
+  highWaterMark: 3,
+  autoClose: true,
+});
+// highWaterMark 对应你写入的数据  超出了就会返回false
+const flag = ws.write('你你你');
+
+console.log(flag,'返回值👇');
+
+```
+![img](/Node/img/7.png)
+
+复制一个文件数据到另一个地方
+```js
+// 第一种方式
+async function mothod2() {
+  const dirname = path.resolve(__dirname, './myfiles/1.txt');
+  const to = path.resolve(__dirname, './myfiles/2.txt');
+  console.time('1');
+  const rs = fs.createReadStream(dirname);//读
+  const ws = fs.createWriteStream(dirname);//写
+  rs.on('data', (chunk) => {
+    // 读一部分
+    const flag = ws.write(chunk); //写一部分
+    if (!flag) {
+      // 产生背压 暂停
+      rs.pause();
+    }
+  });
+  ws.on('drain', () => {
+    // 背压空了 恢复
+    rs.resume();
+  });
+
+  // 读完了
+  rs.on('end', () => {
+    ws.end();//停止写入
+    console.timeEnd('1');
+    console.log('ok');
+  });
+}
+mothod2();
+// 第二种方式
+async function mothod2() {
+  const dirname = path.resolve(__dirname, './myfiles/1.txt');
+  const to = path.resolve(__dirname, './myfiles/2.txt');
+  console.time('方式2');
+  const rs = fs.createReadStream(dirname); //读
+  const ws = fs.createWriteStream(dirname); //写
+
+  // 连接es和ws 省略第一种方式的多余代码 有pipe来做
+  rs.pipe(ws);
+
+  // 读完了
+  rs.on('close', () => {
+    ws.end(); //停止写入
+    console.timeEnd('方式2');
+  });
+}
+mothod2();
+执行时间不代表一切
+大文件一定要使用流,不然内存受不了
+```
+![img](/Node/img/8.png)
