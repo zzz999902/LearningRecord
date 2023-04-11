@@ -480,3 +480,152 @@ mothod2();
 大文件一定要使用流,不然内存受不了
 ```
 ![img](/Node/img/8.png)
+
+# net模块（网络）
+
+## 回顾一下http请求
+1. 普通模式
+![img](/Node/img/9.png)
+2. 长连接模式
+![img](/Node/img/10.png)
+
+## net能干什么
+
+net是一个**通信模块**，利用它可以实现
+
+         1. 进程间的通信 IPC
+         2. 网络通信 TCP/IP
+## 创建客户端
+![img](/Node/img/12.png)
+```js
+const net = require('net');
+
+const socket = net.createConnection(
+  {
+    host: 'duyi.ke.qq.com',
+    port: 80,
+  },
+  () => {
+    console.log('连接成功');
+  }
+);
+
+socket.on('data', (chunk) => {
+  console.log('服务器消息', chunk.toString('utf-8'));
+  socket.end();
+});
+
+socket.write(`GET / HTTP/1.1
+Host: duyi.ke.qq.com
+Connection: keep-alive
+
+`);
+
+socket.on('close', () => {
+  console.log('结束了！');
+});
+
+```
+## 创建服务器
+![img](/Node/img/13.png)
+![img](/Node/img/14.png)
+```js
+const net = require('net');
+const server = net.createServer();
+const fs = require('fs');
+const path = require('path');
+
+server.listen(9527); // 服务器监听9527端口
+
+server.on('listening', () => {
+  console.log('server listen 9527');
+});
+
+server.on('connection', (socket) => {
+  console.log('有客户端连接到服务器');
+
+  socket.on('data', async (chunk) => {
+    // console.log(chunk.toString("utf-8"));
+    // 服务器写入
+    const filename = path.resolve(__dirname, './hsq.jpg');
+    const bodyBuffer = await fs.promises.readFile(filename);
+    const headBuffer = Buffer.from(
+      `HTTP/1.1 200 OK
+Content-Type: image/jpeg
+
+`,
+      'utf-8'
+    );
+    const result = Buffer.concat([headBuffer, bodyBuffer]);
+    socket.write(result);
+    socket.end();
+  });
+
+  socket.on('end', () => {
+    console.log('连接关闭了');
+  });
+});
+
+```
+![img](/Node/img/15.png)
+
+# http模块
+
+**net太麻烦 不会直接使用他的 常见的是直接使用http模块**
+
+![img](/Node/img/16.png)
+
+https://nodejs.cn/api/http.html#httprequestoptions-callback
+
+
+## request(发送请求)
+```js
+const http = require('http');
+
+const request = http.request(
+  'http://yuanjin.tech:5005/api/movie',
+  {
+    method: 'GET',
+  },
+  (resp) => {
+    console.log('服务器响应的状态码', resp.statusCode);
+    console.log('服务器响应头', resp.headers);
+    let result = '';
+    resp.on('data', (chunk) => {
+      result += chunk.toString('utf-8');
+    });
+
+    resp.on('end', (chunk) => {
+      console.log(JSON.parse(result));
+    });
+  }
+);
+
+request.end(); //表示消息体结束
+
+```
+
+## createServer（接受请求）
+
+https://nodejs.cn/api/http.html#httpcreateserveroptions-requestlistener
+
+req = IncomingMessage
+res = ServerResponse
+
+```js
+const http = require('http');
+
+// 创建本地服务器来从其接收数据
+// req = IncomingMessage
+// res = ServerResponse
+const server = http.createServer((req, res) => {
+  console.log(req.url, '请求来了');
+});
+
+server.listen(9527);
+
+server.on('listening', () => {
+  console.log('监听');
+});
+
+```
