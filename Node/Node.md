@@ -633,3 +633,83 @@ server.on('listening', () => {
 # hppts协议
 
 https保证数据在传输过程中不被窃取和篡改，从而保证**传输安全**
+
+https证书免费流程,具体流程上网查一下把
+![img](/Node/img/18.png)
+
+# node生命周期
+
+## node事件循环（面试题爱问）
+
+![img](/Node/img/19.png)
+
+## timers：存放计时器的回调函数
+## poll：轮询队列
+
+1. 除了timers、checks
+1. 绝大部分的回调都会放入该队列
+1. 比如：文件读取、监听用户请求
+1. 运作方式
+       - 如果poll中有回调、依次执行回调、直到清空队列
+       - 如果poll中没有回调👇
+       - 1.等待其他队列中出现回调，结束该阶段，进入下一阶段。
+       - 2.如果其他队列也没有回调，持续等待，直到出现回调为止
+
+## check:检查阶段
+
+check：检查阶段 **会使用setImmediate的回调会直接进入这个队列** 
+ 
+## 事件循环中，每次打算执行一个回调之前，必须要先清空nextTick然后是promise队列
+
+```js
+// 面试题 练习题
+async function async1() {
+  console.log("async1 start");
+  await async2();
+  console.log("async1 end");
+}
+async function async2() {
+  console.log("async2");
+}
+console.log("script start");
+setTimeout(function() {
+  console.log("setTimeout0");
+}, 0);
+setTimeout(function() {
+  console.log("setTimeout3");
+}, 3);
+setImmediate(() => console.log("setImmediate"));
+process.nextTick(() => console.log("nextTick"));
+async1();
+new Promise(function(resolve) {
+  console.log("promise1");
+  resolve();
+  console.log("promise2");
+}).then(function() {
+  console.log("promise3");
+});
+console.log("script end");
+
+
+timers: setTimeout0 setTimeout3
+check: setImmediate
+process.nextTick: nextTick
+Promise: console.log("async1 end"); promise3
+
+console.log("script start");
+console.log("async1 start");
+console.log("async2");
+console.log("promise1");
+console.log("promise2");
+console.log("script end");
+nextTick
+console.log("async1 end");
+promise3
+
+setTimeout0
+setTimeout3 
+setImmediate
+// 后面这三个顺序不一定谁在谁的地方上  看程序的卡顿时间了
+```
+
+# EventEmitter
