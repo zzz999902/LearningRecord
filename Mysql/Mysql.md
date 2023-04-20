@@ -53,3 +53,5 @@ character-set-server=utf8mb4
 **使用命令行操作mysql太麻烦了**
 
 **navicat**百度自行安装破解吧
+
+请勿用于非法用途,支持正版
