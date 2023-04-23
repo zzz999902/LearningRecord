@@ -138,3 +138,4 @@ drop database 数据库名;
 ## DDL-表关系
 
 ![](/Mysql/img/10.png)
+ 
