@@ -58,6 +58,7 @@ character-set-server=utf8mb4
 
 # 数据库设计
 
+菜鸟教程：https://www.runoob.com/mysql/mysql-tutorial.html
 ## SQL
 
 Structured Query Language 结构化查询语言
@@ -84,3 +85,56 @@ Data Manipulation Language 数据操控语言
 Data Control Language 数据控制语句
 
 **主要操作用户权限**
+
+## DDL-管理库（命令操作）
+
+数据库不区分大小写
+ctrl+r 运行
+
+### 创建库 
+
+CREATE DATABASE 数据库名;
+
+### 切换当前库 
+
+use 数据库名字;
+
+### 删除库
+
+drop database 数据库名;
+
+## DDL-管理表
+
+字段常用类型
+
+1. bit：占1位，0或1，false或true
+2. int：占32位，整数
+3. decimal(M,N)：能精确计算的实数，M是总的数字位数，N是小数位数
+4. char(n)：固定长度位n的字符
+5. varchar(n)：长度可变，最大长度位n的字符
+6. text：大量的字符
+7. date：仅日期
+8. datetime：日期和时间
+9. time：仅时间
+
+后续再写命令
+
+## DDL-主键和外键
+
+根据设计原则，每张表都要有主键
+
+1. 保持唯一
+2. 不能更改
+3. 无业务含义
+
+### 外键
+
+用于产生表关系的列
+
+外键列会连接到另一张表（或自己）的主键
+
+![](/Mysql/img/9.png)
+
+## DDL-表关系
+
+![](/Mysql/img/10.png)
