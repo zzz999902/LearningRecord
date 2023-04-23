@@ -55,3 +55,32 @@ character-set-server=utf8mb4
 **navicat**百度自行安装破解吧
 
 请勿用于非法用途,支持正版
+
+# 数据库设计
+
+## SQL
+
+Structured Query Language 结构化查询语言
+大部分关系型数据，拥有着基本一致的SQL语法
+
+### DDL
+
+Data Definition Language 数据定义语言
+
+**主要操作数据库对象**
+1. 库
+2. 表
+3. 视图
+4. 存储过程
+
+### DML
+
+Data Manipulation Language 数据操控语言
+
+**主要操作数据库中的记录**
+
+### DCL
+
+Data Control Language 数据控制语句
+
+**主要操作用户权限**
