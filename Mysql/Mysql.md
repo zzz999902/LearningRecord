@@ -56,15 +56,15 @@ character-set-server=utf8mb4
 
 请勿用于非法用途,支持正版
 
-# 数据库设计
+
+# SQL(数据库设计)
 
 菜鸟教程：https://www.runoob.com/mysql/mysql-tutorial.html
-## SQL
 
 Structured Query Language 结构化查询语言
 大部分关系型数据，拥有着基本一致的SQL语法
 
-### DDL
+## DDL
 
 Data Definition Language 数据定义语言
 
@@ -74,36 +74,24 @@ Data Definition Language 数据定义语言
 3. 视图
 4. 存储过程
 
-### DML
-
-Data Manipulation Language 数据操控语言
-
-**主要操作数据库中的记录**
-
-### DCL
-
-Data Control Language 数据控制语句
-
-**主要操作用户权限**
-
-## DDL-管理库（命令操作）
+### DDL-管理库（命令操作）
 
 数据库不区分大小写
 ctrl+r 运行
 
-### 创建库 
+#### 创建库 
 
 CREATE DATABASE 数据库名;
 
-### 切换当前库 
+#### 切换当前库 
 
 use 数据库名字;
 
-### 删除库
+#### 删除库
 
 drop database 数据库名;
 
-## DDL-管理表
+### DDL-管理表
 
 字段常用类型
 
@@ -117,9 +105,7 @@ drop database 数据库名;
 8. datetime：日期和时间
 9. time：仅时间
 
-后续再写命令
-
-## DDL-主键和外键
+### DDL-主键和外键
 
 根据设计原则，每张表都要有主键
 
@@ -127,7 +113,7 @@ drop database 数据库名;
 2. 不能更改
 3. 无业务含义
 
-### 外键
+#### 外键
 
 用于产生表关系的列
 
@@ -135,7 +121,184 @@ drop database 数据库名;
 
 ![](/Mysql/img/9.png)
 
-## DDL-表关系
+### DDL-表关系
 
 ![](/Mysql/img/10.png)
- 
+
+## DML
+
+Data Manipulation Language 数据操控语言
+
+**主要操作数据库中的记录**
+
+1. 增 CREATE
+2. 查 Retrieve
+3. 改 UPDATE
+4. 删 DELETE
+
+### DML-增删改
+
+```js
+// -- 增加语句
+// 如果插入别的表就在前面加-列如:`test.``student`
+// 对应表的字段 增加一条或者多条
+INSERT INTO `student`(`name`,`birthday`,`sex`,`phone`)
+VALUES('成哥','2023-04-24',DEFAULT,'18809284759'),
+('成哥2','2223-04-24',DEFAULT,'13131314431');
+
+// -- 修改语句
+// 修改student表里面id=8的name
+UPDATE student SET `name`='偿心愿' 
+// WHERE = 条件
+WHERE id=8;
+
+// -- 删除语句
+DELETE FROM student
+WHERE `name`='成哥';
+```
+
+### DML-单表基础查询*
+
+**表结构**
+![](/Mysql/img/11.png)
+
+#### SELECT
+
+```js
+// 查询user的id and loginid , loginpwd 列名改成密码
+SELECT id,loginid,loginpwd as '密码' FROM `user`
+
+// * 表示 查询 employee 的所有数据
+SELECT * FROM `employee`;
+
+// case 对单独的列进行操作
+SELECT
+	id,
+	`name`,
+CASE
+		ismale 
+		WHEN 1 THEN
+		'男' ELSE '女' 
+	END AS '性别',
+CASE
+		
+		WHEN salary >= 10000 THEN
+		'高' 
+		WHEN salary >= 5000 THEN
+		'中' ELSE '低' 
+	END '工资' 
+FROM
+	`employee`;
+```
+#### FROM
+
+```js
+// 查询employee数据
+SELECT * FROM employee 
+```
+
+#### WHERE
+
+**对数据进行进一步的筛选查询条件**
+1. =
+```js
+// 查询employee 里面ismale 里面 等于1 的数据
+SELECT
+	* 
+FROM
+	employee 
+WHERE ismale = 1;
+```
+2. in
+```js
+// 查询department 里面 companyId 是1或者2的数据
+SELECT
+	* 
+FROM
+	department 
+WHERE companyId in (1,2);
+```
+3. is 和is not
+```js
+// 查询employee里面location是null的数据
+SELECT * FROM employee
+WHERE location is null;
+// 相反
+SELECT * FROM employee
+WHERE location is not null;
+```
+4. '> < >= <='
+```js
+// 查询employee里面salary小于某个数值的
+SELECT * FROM employee
+WHERE salary < 10000;
+// '> < >= <=' 类似
+```
+5. between
+```js
+// 查询employee里面salary在什么之间的数据
+SELECT * FROM employee
+WHERE salary BETWEEN 10000 and 12000;
+```
+6. like
+```js
+// 模糊查询name %袁%(带袁的)  %袁(结尾带袁的)  袁%(名字带袁的) 袁_(两个字的)
+SELECT * FROM employee
+WHERE `name` LIKE '%袁%';
+```
+7. and
+```js
+// 同时多个条件查询
+SELECT * FROM employee
+WHERE `name` LIKE '张%' and ismale = 0 and salary >= 10000;
+```
+8.  or
+```js
+// 第一种  两个条件满足一个就行
+SELECT * FROM employee
+WHERE `name` LIKE '张%' and ismale = 0 and salary >= 10000
+OR birthday >=  '2000-1-1';
+// 第二种 必须姓张 要么是0 大于10000 要么大于就是2000-1-1
+SELECT * FROM employee
+WHERE `name` LIKE '张%' and (ismale = 0 and salary >= 10000
+OR birthday >=  '2000-1-1');
+```
+
+#### ORDER BY 
+
+```js
+// 查询salary数据排序升序  降序是desc 升序是asc
+SELECT * FROM employee
+WHERE `name` LIKE '张%' 
+ORDER BY salary ASC;
+
+// 对女的进行升序排序同时工资降序排序
+SELECT *,CASE ismale
+	WHEN 1 THEN
+		'男'
+	ELSE
+		'女'
+END sex
+FROM employee
+WHERE `name` LIKE '张%' 
+ORDER BY sex ASC,salary DESC;
+```
+
+#### LIMIT
+
+```js
+// n,m 跳过n条数据，取出m条数据
+// 去除第二个的后三条数据
+SELECT * FROM employee
+LIMIT 2,3
+```
+
+**运行顺序 from -> where ->  select ->  order by -> limit**
+
+## DCL
+
+Data Control Language 数据控制语句
+
+**主要操作用户权限**
+
+
