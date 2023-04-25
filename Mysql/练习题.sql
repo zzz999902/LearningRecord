@@ -73,3 +73,4 @@ INNER JOIN employee as e on d.id = e.deptId
 GROUP BY c.id, c.`name`
 ORDER BY sumofsalary
 
+-- 练习
