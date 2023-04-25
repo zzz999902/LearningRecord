@@ -387,10 +387,144 @@ WHERE c.`name` like '%渡一%' AND d.`name` = '教学部';
 select DISTINCT location from employee;
 ```
 
+
+### DML-函数和分组
+
+#### 内置函数
+
+##### 数学
+
+1. ABS(x)   返回x的绝对值
+```js
+SELECT ABS(-1)
+// 输出 1
+```
+2. CEILING(x)   返回大于x的最小整数值
+```js
+SELECT CEILING(1.4)
+// 输出 2
+```
+3. FLOOR(x)   返回小于x的最大整数值
+```js
+SELECT FLOOR(1.4)
+// 输出 1
+```
+4. MOD(x,y)    返回x/y的模（余数）
+```js
+SELECT MOD(2,10)
+// 输出 2
+```
+5. PI() 返回pi的值（圆周率）
+```js
+SELECT PI()
+// 输出 3.141593
+```
+6. RAND() 返回０到１内的随机值
+```js
+SELECT RAND()
+// 输出 ０到１内的随机值
+```
+7. ROUND(x,y) 返回参数x的四舍五入的有y位小数的值
+```js
+SELECT ROUND(3.1414522,4)
+// 输出 3.1415
+```
+8. TRUNCATE(x,y)  返回数字x截短为y位小数的结果
+```js
+SELECT TRUNCATE(3.1414522,4)
+// 输出3.1414
+```
+
+##### 聚合
+
+**聚合,只能查询一个东西**
+
+1. AVG(col) 返回指定列的平均值
+```js
+// 查询得是employee 里面得 salary 的平均值
+SELECT AVG(salary)
+FROM employee;
+```
+2. COUNT(col) 返回指定列中非NULL值的个数
+```js
+// 查询得是employee 里面 有id的有多少个
+SELECT COUNT(id)
+FROM employee
+```
+3. MIN(col) 返回指定列的最小值
+```js
+// 查询得是employee 里面 salary 最小的
+SELECT MIN(salary)
+FROM employee
+```
+4. MAX(col) 返回指定列的最大值
+```js
+// 查询得是employee 里面 salary 最大的
+SELECT MAX(salary)
+FROM employee
+```
+5. SUM(col) 返回指定列的所有值之和
+```js
+// 查询得是employee 里面 salary 的和
+SELECT SUM(salary)
+FROM employee
+```
+
+**综合查询练习**
+```js
+SELECT count(id) as 员工数量,
+avg(salary) as 平均薪资,
+sum(salary) as 总薪资,
+min(salary) as 最小薪资
+FROM employee;
+```
+
+##### 字符
+
+1. CONCAT(s1,s2...,sn) 将s1,s2...,sn连接成字符串
+```js
+SELECT CONCAT_WS('+',`name`,salary)
+FROM employee
+// 输出 name + salary
+```
+2. CONCAT_WS(sep,s1,s2...,sn) 将s1,s2...,sn连接成字符串，并用sep字符间隔
+```js
+SELECT CONCAT(`name`,salary)
+FROM employee
+// 输出 name拼接salary
+```
+3. TRIM(str) 去除字符串首部和尾部的所有空格
+4. LTRIM(str) 从字符串str中切掉开头的空格
+5. RTRIM(str) 返回字符串str尾部的空格
+
+##### 日期
+
+1. CURDATE()或CURRENT_DATE() 返回当前的日期
+2. CURTIME()或CURRENT_TIME() 返回当前的时间
+3. TIMESTAMPDIFF(part,  date1,date2) 返回date1到date2之间相隔的part值，part是用于指定的相隔的年或月或日等 part 属性👇
+      - MICROSECOND
+      - ECOND
+      - MINUTE  
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - QUARTER
+      - YEAR
+
+##### 自定义函数
+
+#### 分组
+
+```js
+// 运行顺序
+from -> join on -> where -> group by -> select -> having 
+-> order by -> limit
+```
+分组后，**只能查询分组的列和聚合列**
+
 ## DCL
 
 Data Control Language 数据控制语句
 
 **主要操作用户权限**
-
-
