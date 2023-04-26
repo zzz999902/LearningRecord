@@ -521,6 +521,9 @@ FROM employee
 // 运行顺序
 from -> join on -> where -> group by -> select -> having 
 -> order by -> limit
+
+group by : 要查询的列名字
+having : 条件
 ```
 分组后，**只能查询分组的列和聚合列**
 
@@ -545,3 +548,11 @@ HAVING count(id)>=30
 Data Control Language 数据控制语句
 
 **主要操作用户权限**
+
+1. 新建视图
+![](/Mysql/img/12.png)
+2. 直接查询视图
+```js
+SELECT * FROM empinfo
+WHERE cname LIKE '%渡一%'
+```
