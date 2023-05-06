@@ -121,6 +121,8 @@ https://github.com/demopark/sequelize-docs-Zh-CN
 
 https://github.com/demopark/sequelize-docs-Zh-CN/blob/master/core-concepts/getting-started.md
 
+**连接创建例子在models中，这里少量举例**
+
 ## 安装
 
 ```js
@@ -163,3 +165,65 @@ const sequelize = new Sequelize('myschooldb', 'root', '823164975', {
 module.exports = sequelize;
 ```
 
+## 创建模型
+
+```js
+const { Sequelize, DataTypes } = require('sequelize');
+
+// 方法 3: 分别传递参数 (其它数据库)
+// 参数分别是 数据库名字 账号 密码
+const sequelize = new Sequelize('myschooldb', 'root', '823164975', {
+  host: 'localhost',
+  dialect: 'mysql',
+  /* 选择 'mysql' | 'mariadb' | 'postgres' | 'mssql' 其一 */
+  //   logging: console.log, // 日志
+});
+
+// 创建一个模型对象
+const Admin = sequelize.define(
+  'Admin',
+  {
+    // 在这里定义模型属性
+    loginId: {
+      type: DataTypes.STRING, //类型
+      allowNull: false, // 是否允许为null
+    },
+    loginPwd: {
+      type: DataTypes.STRING, //类型
+      allowNull: false, // 是否允许为null
+    },
+    name: {
+      type: DataTypes.STRING, //类型
+      allowNull: false, // 是否允许为null
+    },
+  },
+  {
+    // 这是其他模型参数
+
+    // tableName: 'admin', // 自动设置表明
+
+    // freezeTableName: true, // 加了名字后面不会自动加s 不加就会自动加s
+
+    // 不要忘记启用时间戳！
+    // timestamps: true,
+
+    // 不想要 createdAt updatedAt
+    createdAt: false,
+    updatedAt: false,
+
+    // 想要 updatedAt 但是希望名称叫做 updateTimestamp
+    // updatedAt: 'updateTimestamp',
+
+    //从此以后，该表的数据不会真正的删除，而是增加一列deletedAt，记录删除的时间
+    paranoid: true,
+  }
+);
+
+module.exports = Admin;
+
+```
+
+## 增删改查
+
+
+![](/数据驱动和ORM/img/%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84.jpg)
