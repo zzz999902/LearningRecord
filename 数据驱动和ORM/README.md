@@ -221,6 +221,9 @@ const Admin = sequelize.define(
 
 module.exports = Admin;
 
+// 关联关系 班级对应多个学生
+// 例子：一对多 class对多个student
+Class.hasMany(Student);
 ```
 
 ## 增删改查
