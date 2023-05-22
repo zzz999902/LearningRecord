@@ -14,10 +14,10 @@ const Admin = sequelize.define(
       type: DataTypes.STRING, //类型
       allowNull: false, // 是否允许为null
     },
-    name: {
-      type: DataTypes.STRING, //类型
-      allowNull: false, // 是否允许为null
-    },
+    // name: {
+    //   type: DataTypes.STRING, //类型
+    //   allowNull: false, // 是否允许为null
+    // },
   },
   {
     // 这是其他模型参数
