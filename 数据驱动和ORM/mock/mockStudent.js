@@ -11,6 +11,6 @@ const result = Mock.mock({
     },
   ],
 }).datas;
-console.log(result);
+// console.log(result);
 const Student = require("../models/Student");
 Student.bulkCreate(result);

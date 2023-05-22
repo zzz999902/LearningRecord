@@ -1,5 +1,7 @@
-const adminServ = require('./services/adminService');
-const bookServ = require('./services/bookService');
+// const adminServ = require('./services/adminService');
+// const bookServ = require('./services/bookService'); 
+require("./models/relation");
+require("./mock/mockStudent");
 
 // bookServ.AddBook({
 //   name: '清华书店',
