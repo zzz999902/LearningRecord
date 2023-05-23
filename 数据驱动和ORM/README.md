@@ -234,6 +234,113 @@ Class.hasMany(Student);
 
 对应 services
 
+```js
+const adminServ = require("./services/adminService");
+adminServ.addAdmin({
+  loginId: "asdfasdfasdfssa",
+  loginPwd: "adsfasdfd",
+});
+
+adminServ.deleteAdmin(4).then((r) => {
+  console.log(r);
+});
+
+adminServ.updateAdmin(2, {loginId: "aaaaaa"}).then((r) => {
+    console.log(r);
+});
+```
+
 ## 模拟数据
 
 http://mockjs.com/  
+
+对应 mock
+
+## 数据抓取
+
+1. axios
+2. cheerio
+
+对应 spider
+
+## 数据查询
+
+https://github.com/demopark/sequelize-docs-Zh-CN/blob/master/core-concepts/model-querying-basics.md
+
+1. 查询单个数据：findOne
+2. 按照主键查询单个数据：findByPK
+3. 查询多个数据：findAll
+4. 查询数量：count
+5. 包含关系：include
+
+```js
+// 1. 查询单个数据：findOne
+exports.login = async function (loginId, loginPwd) {
+  const result = await Admin.findOne({
+    where: {
+      loginId,
+      loginPwd,
+    },
+  });
+  if (result && result.loginId === loginId && result.loginPwd === loginPwd) {
+    return result.toJSON();
+  } 
+  return null;
+};
+
+// 2. 按照主键查询单个数据：findByPK
+exports.getAdminById = async function (id) {
+  const result = await Admin.findByPk(id);
+  if (result) {
+    return result.toJSON();
+  }
+  return null;
+};
+
+// 3. 查询多个数据：findAll
+exports.getAdmins = async function () {
+  const result = await Admin.findAll();
+  return JSON.parse(JSON.stringify(result));
+};
+
+// 5.包含关系：include
+exports.getStudents = async function (
+  page = 1,
+  limit = 10,
+  sex = -1,
+  name = ''
+) {
+  const where = {};
+  if (sex !== -1) {
+    where.sex = !!sex;
+  }
+  if (name) {
+    where.name = {
+      [Op.like]: `%${name}%`,
+    };
+  }
+
+  const result = await Student.findAndCountAll({
+    attributes: ['id', 'name', 'sex', 'birthdady'],
+    where,
+    include: [Class],
+    offset: (page - 1) * limit,
+    limit: +limit,
+  });
+  return {
+    total: result.count,
+    datas: JSON.parse(JSON.stringify(result.rows)),
+  };
+};
+```
+
+## MD5加密
+
+https://www.npmjs.com/package/md5
+
+**md5加密的特点**
+
+- hash加密算法的一种
+- 可以将任何一个字符串，加密成一个固定长度的字符串
+- 单向加密：只能加密无法解密
+- 同样的源字符串加密后得到的结果固定

@@ -1,6 +1,6 @@
 // 管理员初始化
 // 判断数据库中是否有管理员，如果没有，自动添加一个默认管理员
-const Admin = require("../models/Admin");
+const Admin = require('../models/Admin');
 exports.addAdmin = async function (adminObj) {
   // 应该判断adminObj的各种属性是否合理，以及账号是否已存在
   const ins = await Admin.create(adminObj);
@@ -39,5 +39,36 @@ exports.updateAdmin = async function (id, adminObj) {
       id,
     },
   });
+  return result;
+};
+
+exports.login = async function (loginId, loginPwd) {
+  const result = await Admin.findOne({
+    where: {
+      loginId,
+      loginPwd,
+    },
+  });
+  if (result && result.loginId === loginId && result.loginPwd === loginPwd) {
+    return result.toJSON();
+  }
+  return null;
+};
+
+exports.getAdminById = async function (id) {
+  const result = await Admin.findByPk(id);
+  if (result) {
+    return result.toJSON();
+  }
+  return null;
+};
+
+exports.getAdmins = async function () {
+  const result = await Admin.findAll();
+  return JSON.parse(JSON.stringify(result));
+};
+
+exports.getAdmincount = async function () {
+  const result = await Admin.include( );
   return result;
 };
