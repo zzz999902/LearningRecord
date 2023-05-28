@@ -363,3 +363,39 @@ http://momentjs.cn/
 // 尽量使用utc
 moment.utc()
 ```
+
+# 数据验证
+
+## 数据验证的位置
+
+1. 前端（客户端）：为了用户体验
+2. 路由层：验证接口格式是否正常
+3. 业务逻辑层：保证业务完整性
+4. 数据库验证（约束）：保证数据完整性
+
+## 相关的库
+
+- [validator](https://github.com/validatorjs/validator.js): 用于验证某个字符串是否满足某个规则
+```js
+// 文档的解释
+ const rule = {
+    //验证规则
+    name: {
+      presence: {
+        allowEmpty: false, // name必须存在
+      },
+      type: "string", // 类型
+      length: {   /长度
+        minimum: 1,
+        maximum: 10,
+      },
+       datetime: { // 配置日期
+        dateOnly: true,  // 只需要日期
+        earliest: +moment.utc().subtract(100, "y"), // 最早不能早于100年前
+        latest: +moment.utc().subtract(5, "y"), // 最晚不能晚于五年前
+      },
+      format: /1\d{10}/, // 正则
+    },
+ }
+```
+- [validate.js](http://validatejs.org/):  用于验证某个对象的树形是否满足某些规则
