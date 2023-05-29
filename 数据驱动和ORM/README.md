@@ -399,3 +399,21 @@ moment.utc()
  }
 ```
 - [validate.js](http://validatejs.org/):  用于验证某个对象的树形是否满足某些规则
+
+
+# 日志记录
+
+https://log4js-node.github.io/log4js-node/
+
+## 概念
+
+- level：日志级别
+
+例如调试日志、信息日志、错误日志等等
+
+![](/数据驱动和ORM/img/log等级.jpg)
+
+- category：日志分类 例如：sql日志、请求日志等 等
+
+- appender：日志出口
+
