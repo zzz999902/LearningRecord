@@ -37,3 +37,43 @@ app.get('/abc/:id', (req, res) => {
 });
 
 ```
+
+# nodemon
+
+https://github.com/remy/nodemon#nodemon
+
+nodemon是一个监视器，用于监控工程中的文件变化，如果发现文件有变化，可以执行一段脚本
+
+```js
+// 定义nodemon.json文件
+{ 
+    "env": { 
+        "NODE_ENV": "development" //环境变量
+    },
+    "watch": [ //监听
+        "*.js",
+        "*.json"
+    ],
+    "ignore": [  //忽略文件
+        "package*.json",
+        "nodemon.json",
+        "node_modules",
+        "public"
+    ]
+}
+```
+
+# Express中间件
+
+![](/Express/img/中间件示意图.jpg)
+
+
+- 当匹配到了请求后 : 交给第一个处理函数处理,函数中需要手动的交给后续中间件处理
+- 中间件处理的细节 : 如果后续已经没有了中间件,express发现如果响应没有结束,express会响应404
+- 如果中间件发生了错误: 不会停止服务器,相当于调用了 next(错误对象),寻找后续的错误处理中间件,如果没有，则响应500
+
+## 常用的中间件
+
+- express.static() ： 映射 public 目录中的静态资源
+- express.json() ：  解析  application/json 格式请求体 
+- express.urlencoded()  解析 application/x-www-form-urlencoded 格式请求体
