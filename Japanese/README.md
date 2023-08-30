@@ -83,9 +83,13 @@
 
 <table>
     <tr>
-        <th colspan="3">分类</th>
+        <td>分类</td> 
+        <td>形容词原型</td> 
+        <th colspan="4">简体</th>
     </tr>
     <tr>
+        <td>分类</td> 
+        <td>形容词原型</td> 
         <td>形容词原型</td>
         <td>简体</td>
     </tr>
@@ -93,5 +97,7 @@
         <td rowspan="2">合并两列</td>
         <td>行2列2</td>
         <td>行2列3</td>
+        <td>分类</td> 
+        <td>形容词原型</td> 
     </tr>
 </table>
