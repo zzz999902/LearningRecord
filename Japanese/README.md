@@ -90,14 +90,16 @@
     <tr>
         <td>分类</td> 
         <td>形容词原型</td> 
-        <td>形容词原型</td>
-        <td>简体</td>
+         <th colspan="2">过去时</th>
+         <th colspan="2">非过去时</th>
     </tr>
     <tr>
         <td rowspan="2">合并两列</td>
         <td>行2列2</td>
         <td>行2列3</td>
         <td>分类</td> 
+        <td>形容词原型</td> 
+         <td>分类</td> 
         <td>形容词原型</td> 
     </tr>
 </table>
